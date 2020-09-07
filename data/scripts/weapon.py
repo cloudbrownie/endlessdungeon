@@ -4,13 +4,18 @@ class Weapon:
     def __init__(self):
         self.x = 0
         self.y = 0
-        self.surface = pygame.Surface((32, 16))
+        self.surface = pygame.Surface((16, 8))
         self.surface.fill((255, 255, 255))
         self.surface.set_colorkey((0, 0, 0))
-        self.distance = 50
+        self.distance = 25
         self.projectileAngle = 0
+        self.shooting = False
         self.lastShot = time.time()
-        self.shootInterval = .1
+        self.shootInterval = .05
+        self.currentClip = 25
+        self.reloading = False
+        self.setReloadTime = time.time() 
+        self.reloadTime = .25
 
     def draw(self, dest, playerCenter, cursorCenter, scroll):
         angle = self.findDrawAngle(playerCenter, cursorCenter, scroll)
@@ -37,6 +42,25 @@ class Weapon:
         self.x = playerCenter[0] - x
         self.y = playerCenter[1] + y
 
-    def update(self, dest, scroll, playerCenter, cursorCenter):
-        self.reposition(playerCenter, cursorCenter, scroll)
-        self.draw(dest, playerCenter, cursorCenter, scroll)
+    def update(self, dest, scroll, player, cursorCenter, projectileManager):
+        self.reposition(player.rect.center, cursorCenter, scroll)
+        self.draw(dest, player.rect.center, cursorCenter, scroll)
+        if self.shooting:
+            self.shoot(projectileManager, player.projectileRadius, player.projectileSpeed, player.projectileDamage, player.projectileHits)
+        self.reloadClip()
+
+    def reloadClip(self):
+        if self.reloading and time.time() - self.setReloadTime >= self.reloadTime:
+            self.currentClip = 25
+            self.reloading = False
+
+    def shoot(self, projectileManager, radius, speed, damage, hits):
+        if self.currentClip > 0 and not self.reloading and time.time() - self.lastShot >= self.shootInterval:
+            self.lastShot = time.time()
+            projectileManager.add(self.x, self.y, 'player', self.projectileAngle, radius, speed, damage, hits)
+            self.currentClip -= 1
+        elif self.currentClip <= 0 and not self.reloading:
+            self.setReloadTime = time.time()
+            self.reloading = True
+
+

@@ -5,12 +5,21 @@ def roundToWhole(val):
 
 class Player:
     def __init__(self):
-        self.rect = pygame.Rect(0, 0, 32, 32)
-        self.surface = pygame.Surface((32, 32))
+        self.tag = 'player'
+        self.rect = pygame.Rect(300, 300, 16, 16)
+        self.surface = pygame.Surface(self.rect.size)
         self.surface.fill((255, 255, 255))
         self.vels = [0, 0]
-        self.speed = 5
+        self.speed = 2
         self.movements = {'left':False, 'right':False, 'up':False, 'down':False}
+        self.health = 100
+        self.projectileRadius = 5
+        self.projectileSpeed = 7
+        self.projectileDamage = 5
+        self.projectileHits = 1
+
+    def damage(self, val):
+        self.health -= val
 
     def draw(self, dest, scroll):
         dest.blit(self.surface, (self.rect.x - scroll[0], self.rect.y - scroll[1]))
@@ -52,9 +61,8 @@ class Player:
             else:
                 self.rect.top = tile.rect.bottom
 
-    def update(self, dest, scroll, dt, tiles):
+    def update(self, dt, tiles):
         self.move(dt)
         self.updateRect(tiles)
-        self.draw(dest, scroll)
 
 

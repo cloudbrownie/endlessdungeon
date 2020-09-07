@@ -7,7 +7,7 @@ class TextButton:
         self.center = centerx, centery
         self.scale = scale
         self.active = False
-        self.activeSurf, self.activeRect = self.render(self.scale * 1.15, activeColor)
+        self.activeSurf, self.activeRect = self.render(self.scale * 1.5, activeColor)
         self.inactiveSurf, self.inactiveRect = self.render(self.scale, inactiveColor)
 
     def render(self, scale, color):

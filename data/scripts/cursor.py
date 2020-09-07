@@ -4,7 +4,7 @@ from data.scripts.textures import loadTextures
 
 class Cursor:
     def __init__(self, imagepath, xRatio, yRatio):
-        images = loadTextures(imagepath, colorkey=(0, 0, 0), scale=3)
+        images = loadTextures(imagepath, colorkey=(0, 0, 0), scale=2)
         self.defaultSurf = images[0][0]
         self.activeSurf = images[1][0]
         self.xRatio = xRatio
